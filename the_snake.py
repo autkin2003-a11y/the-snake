@@ -78,14 +78,12 @@ class GameObject:
 
     def draw_cell(self, position, color=None):
         """Отрисовка одной ячейки поля"""
-        if color is None:
-            color = self.body_color
+        if not color:
+            color = color or self.body_color
         rect = pg.Rect(position, (GRID_SIZE, GRID_SIZE))
         pg.draw.rect(screen, color, rect)
         if color != BOARD_BACKGROUND_COLOR:
             pg.draw.rect(screen, BORDER_COLOR, rect, 1)
-        else:
-            pg.draw.rect(screen, BOARD_BACKGROUND_COLOR, rect, 1)
 
 
 class Apple(GameObject):
@@ -149,7 +147,7 @@ class Snake(GameObject):
 
     def grow(self):
         """Возвращает съеденный хвост на место: змея удлиняется."""
-        if self.last is not None:
+        if self.last:
             self.positions.append(self.last)
             self.last = None
 
@@ -199,8 +197,7 @@ def main():
         if head_position == apple.position:
             snake.grow()
             apple.randomize_position(snake.positions)
-
-        if head_position in snake.positions[1:]:
+        elif head_position in snake.positions[1:]:
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
             apple.randomize_position(snake.positions)
